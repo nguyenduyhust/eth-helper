@@ -11,9 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.19.2",
-    "bitgo": "^11.4.0",
-    "web3": "^1.2.11",
-    "ws": "^7.3.1"
+    "web3": "^1.2.11"
   },
   "devDependencies": {
     "@types/ganache-core": "^2.7.0",
