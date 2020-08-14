@@ -21,7 +21,7 @@ export declare class EthHelper {
     private eth;
     private defaultAccount?;
     private defaultTransactionConfirmationBlocks;
-    constructor(provider: provider, privateKey?: string, options?: {
+    protected constructor(provider: provider, privateKey?: string, options?: {
         defaultTransactionConfirmationBlocks?: number;
     });
     static factoryMethod(args?: FactoryArgs): EthHelper;

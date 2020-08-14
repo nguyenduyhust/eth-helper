@@ -77,9 +77,6 @@ var EthHelper = /** @class */ (function () {
         if (!provider) {
             throw Error("Provider is missing");
         }
-        if (!privateKey) {
-            throw Error("Please provide default private key");
-        }
         return new EthHelper(provider, privateKey, options);
     };
     /**
