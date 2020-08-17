@@ -25,6 +25,10 @@ var EthUtils = /** @class */ (function () {
         var accounts = new Accounts("");
         return accounts.privateKeyToAccount(EthUtils.hexStringFull(privateKey));
     };
+    EthUtils.createAccount = function () {
+        var accounts = new Accounts("");
+        return accounts.create();
+    };
     return EthUtils;
 }());
 exports.EthUtils = EthUtils;

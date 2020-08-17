@@ -4,4 +4,5 @@ export declare class EthUtils {
     static hexStringShort(value: string): string;
     static padLeft(value: string, length: number, fill?: string): string;
     static privateKeyToAccount(privateKey: string): Account;
+    static createAccount(): Account;
 }
