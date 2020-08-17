@@ -1,4 +1,5 @@
 const Accounts = require("web3-eth-accounts");
+// import { Accounts } from "web3-eth-accounts";
 import { Account } from "web3-core";
 
 export class EthUtils {
@@ -24,5 +25,10 @@ export class EthUtils {
   public static privateKeyToAccount(privateKey: string): Account {
     const accounts = new Accounts("");
     return accounts.privateKeyToAccount(EthUtils.hexStringFull(privateKey));
+  }
+
+  public static createAccount(): Account {
+    const accounts = new Accounts("");
+    return accounts.create();
   }
 }
