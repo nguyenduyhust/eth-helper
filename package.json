@@ -2,7 +2,6 @@
   "name": "eth-helper",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
   "scripts": {
     "build": "node ./node_modules/.bin/tsc",
     "test": "jest --forceExit --verbose",
