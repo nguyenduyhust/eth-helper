@@ -11,13 +11,8 @@ import {
 } from "web3-core";
 import * as Web3Utils from "web3-utils";
 
-import { EthUtils } from "./eth-utils";
-
-export interface SendTransactionToExternalAccountOptions {
-  privateKey?: string;
-  transactionConfirmationBlocks?: number;
-  onlyGetTxHash?: boolean;
-}
+import { EthUtils } from "../utils";
+import { GetTransactionsByAccountOptions, SendTransactionToExternalAccountOptions } from './interfaces';
 
 export interface FactoryArgs {
   provider?: provider;
@@ -26,12 +21,6 @@ export interface FactoryArgs {
   options?: {
     defaultTransactionConfirmationBlocks?: number;
   };
-}
-
-export interface GetTransactionsByAccountOptions {
-  startBlockNumber: number;
-  endBlockNumber?: number;
-  include?: "from" | "to" | "both";
 }
 
 export class EthHelper {
@@ -178,8 +167,8 @@ export class EthHelper {
           include === "from"
             ? tx.from === accountAddress
             : include === "to"
-            ? tx.to === accountAddress
-            : tx.to === accountAddress || tx.from === accountAddress
+              ? tx.to === accountAddress
+              : tx.to === accountAddress || tx.from === accountAddress
         )
       );
     }

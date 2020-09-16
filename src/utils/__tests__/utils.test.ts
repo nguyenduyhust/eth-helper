@@ -1,4 +1,4 @@
-import { EthUtils } from "../eth-utils";
+import { EthUtils } from "../utils";
 
 describe("Eth Utils", () => {
   describe("createAccount", () => {

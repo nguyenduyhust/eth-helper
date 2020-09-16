@@ -3,8 +3,8 @@ import * as BN from "bn.js";
 import { TransactionReceipt } from "web3-core";
 const Ganache = require("ganache-core");
 // import Ganache from "ganache-core";
-import { EthHelper } from "../eth-helper";
-import { EthUtils } from "../eth-utils";
+import { EthHelper } from "../helper";
+import { EthUtils } from "../../utils";
 
 describe("Web3 Helper", () => {
   describe("getEtherBalance", () => {
@@ -211,5 +211,5 @@ describe("Web3 Helper", () => {
   });
 
   // Ganache hasn't support this function yet
-  describe.skip("isAccountSendingTransaction", () => {});
+  describe.skip("isAccountSendingTransaction", () => { });
 });

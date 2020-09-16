@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "node ./node_modules/.bin/tsc",
-    "test": "jest --forceExit --verbose"
+    "test": "jest --forceExit --verbose",
+    "prepare": "yarn build --outDir ./"
   },
   "author": "",
   "license": "ISC",
@@ -21,5 +22,11 @@
     "jest": "^26.2.2",
     "ts-jest": "^26.1.4",
     "typescript": "^3.9.7"
-  }
+  },
+  "files": [
+    "helper",
+    "utils",
+    "index.js",
+    "index.d.ts"
+  ]
 }

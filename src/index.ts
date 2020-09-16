@@ -1,2 +1,2 @@
-export * from "./eth-helper";
-export * from "./eth-utils";
+export * from "./helper";
+export * from "./utils";
