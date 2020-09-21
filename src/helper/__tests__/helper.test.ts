@@ -211,5 +211,5 @@ describe("Web3 Helper", () => {
   });
 
   // Ganache hasn't support this function yet
-  describe.skip("isAccountSendingTransaction", () => { });
+  describe.skip("isAccountSendingTransaction", () => {});
 });

@@ -1,3 +1,5 @@
+export { Transaction } from "web3-core";
+
 export interface SendTransactionToExternalAccountOptions {
   privateKey?: string;
   transactionConfirmationBlocks?: number;

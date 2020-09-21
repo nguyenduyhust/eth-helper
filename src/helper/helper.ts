@@ -12,7 +12,10 @@ import {
 import * as Web3Utils from "web3-utils";
 
 import { EthUtils } from "../utils";
-import { GetTransactionsByAccountOptions, SendTransactionToExternalAccountOptions } from './interfaces';
+import {
+  GetTransactionsByAccountOptions,
+  SendTransactionToExternalAccountOptions,
+} from "./interfaces";
 
 export interface FactoryArgs {
   provider?: provider;
@@ -154,6 +157,31 @@ export class EthHelper {
     return transactionReceipt;
   }
 
+  public async getTransactionInBlock(
+    blockNumber: number
+  ): Promise<Transaction[]> {
+    const block = await this.eth.getBlock(blockNumber, true);
+    return block.transactions;
+  }
+
+  public async getTransactions(
+    startBlockNumber: number,
+    endBlockNumber?: number
+  ): Promise<Transaction[]> {
+    if (!endBlockNumber) {
+      endBlockNumber = await this.getLastBlockNumber();
+    }
+    if (startBlockNumber > endBlockNumber) {
+      throw new Error("Start block number must be less than end block number");
+    }
+    const transactions: Transaction[] = [];
+    for (let i = startBlockNumber; i <= endBlockNumber; i++) {
+      const block = await this.eth.getBlock(i, true);
+      transactions.push(...block.transactions);
+    }
+    return transactions;
+  }
+
   public async getTransactionsByAccount(
     accountAddress: string,
     options: GetTransactionsByAccountOptions
@@ -171,8 +199,8 @@ export class EthHelper {
           include === "from"
             ? tx.from === accountAddress
             : include === "to"
-              ? tx.to === accountAddress
-              : tx.to === accountAddress || tx.from === accountAddress
+            ? tx.to === accountAddress
+            : tx.to === accountAddress || tx.from === accountAddress
         )
       );
     }

@@ -1,9 +1,11 @@
 import {
   GetTransactionsByAccountOptions,
   SendTransactionToExternalAccountOptions,
-} from './transaction.interface';
+  Transaction,
+} from "./transaction.interface";
 
 export {
   GetTransactionsByAccountOptions,
   SendTransactionToExternalAccountOptions,
-}
+  Transaction,
+};
