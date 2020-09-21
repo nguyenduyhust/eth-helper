@@ -108,6 +108,10 @@ export class EthHelper {
     return this.eth.getPendingTransactions();
   }
 
+  public getLastBlockNumber(): Promise<number> {
+    return this.eth.getBlockNumber();
+  }
+
   public async sendTransactionToExternalAccount(
     transactionConfig: Omit<TransactionConfig, "data">,
     options?: SendTransactionToExternalAccountOptions
