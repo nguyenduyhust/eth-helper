@@ -213,4 +213,8 @@ export class EthHelper {
     const transactions = await this.getPendingTransactions();
     return Boolean(transactions.find((tx) => tx.from === accountAddress));
   }
+
+  public async getTransactionByHash(hash: string): Promise<Transaction> {
+    return this.eth.getTransaction(hash);
+  }
 }
