@@ -215,6 +215,6 @@ export class EthHelper {
   }
 
   public async getTransactionByHash(hash: string): Promise<Transaction> {
-    return this.eth.getTransaction(hash);
+    return await this.eth.getTransaction(hash);
   }
 }
