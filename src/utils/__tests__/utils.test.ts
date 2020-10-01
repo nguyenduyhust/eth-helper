@@ -9,4 +9,14 @@ describe("Eth Utils", () => {
       done();
     });
   });
+
+  describe("isAddress", () => {
+    test("Success", async (done) => {
+      let bool = EthUtils.isAddress("");
+      expect(bool).not.toBeTruthy();
+      bool = EthUtils.isAddress("0x5ECDfC735415b01BD4EfC19d2Fbb4b7FcbAEf64B");
+      expect(bool).toBeTruthy();
+      done();
+    });
+  });
 });

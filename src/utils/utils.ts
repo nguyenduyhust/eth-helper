@@ -1,6 +1,7 @@
 const Accounts = require("web3-eth-accounts");
 // import { Accounts } from "web3-eth-accounts";
 import { Account } from "web3-core";
+const Utils = require("web3-utils");
 
 export class EthUtils {
   public static hexStringFull(value: string) {
@@ -30,5 +31,9 @@ export class EthUtils {
   public static createAccount(): Account {
     const accounts = new Accounts("");
     return accounts.create();
+  }
+
+  public static isAddress(address: string): boolean {
+    return Utils.isAddress(address);
   }
 }
