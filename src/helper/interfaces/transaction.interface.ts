@@ -23,9 +23,19 @@ export interface ITokenTransferArgs {
 }
 
 export interface ITokenInfo {
+  id: number;
   name: string;
   symbol: string;
   decimals?: number;
   icon?: string;
   address: string;
+}
+
+export interface INFTokenTransferArgs {
+  from: string;
+  to: string;
+  tokenInfo: ITokenInfo;
+  gasPrice?: number;
+  gasLimit?: number;
+  data?: string;
 }

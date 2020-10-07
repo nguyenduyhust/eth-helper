@@ -4,6 +4,7 @@ import {
   Transaction,
   ITokenTransferArgs,
   ITokenInfo,
+  INFTokenTransferArgs,
 } from "./transaction.interface";
 
 export {
@@ -12,4 +13,5 @@ export {
   Transaction,
   ITokenInfo,
   ITokenTransferArgs,
+  INFTokenTransferArgs,
 };

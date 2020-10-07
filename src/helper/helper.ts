@@ -15,7 +15,7 @@ import { EthUtils } from "../utils";
 import {
   GetTransactionsByAccountOptions,
   SendTransactionToExternalAccountOptions,
-  ITokenTransferArgs,
+  INFTokenTransferArgs,
 } from "./interfaces";
 
 export interface FactoryArgs {
@@ -225,20 +225,19 @@ export class EthHelper {
     return await this.eth.getTransaction(hash);
   }
 
-  public async sendToken(args: ITokenTransferArgs, privateKey: string) {
-    args.senderAddr = EthUtils.hexStringFull(args.senderAddr);
-    args.receiverAddr = EthUtils.hexStringFull(args.receiverAddr);
-    if (!args.tokenInfo.address) {
+  public async sendNFToken(args: INFTokenTransferArgs, privateKey?: string) {
+    args.from = EthUtils.hexStringFull(args.from);
+    args.to = EthUtils.hexStringFull(args.to);
+    if (!args.tokenInfo.address || !args.tokenInfo.id) {
       return this.sendTransactionToExternalAccount(args);
     }
     this.tokenContract.options.address = args.tokenInfo.address;
-    const count = await this.eth.getTransactionCount(args.senderAddr);
-    const amount = Web3Utils.toWei(args.amount);
+    const count = await this.eth.getTransactionCount(args.from);
     const data = this.tokenContract.methods
-      .transfer(args.receiverAddr, amount)
+      .transfer(args.to, args.tokenInfo.id)
       .encodeABI();
     const rawTx = {
-      from: args.senderAddr,
+      from: args.from,
       gasPrice: Web3Utils.toWei((args.gasPrice || 21).toString()), //gwei
       to: EthUtils.hexStringFull(args.tokenInfo.address),
       gas: "0x00",
@@ -254,10 +253,12 @@ export class EthHelper {
         "ether"
       )
     );
-    const currentBalance = await this.getEtherBalance(args.senderAddr);
+    const currentBalance = await this.getEtherBalance(args.from);
+
     if (parseFloat(currentBalance) < gasPrice * gas) {
       throw new Error("balance_not_enough");
     }
+
     const account = privateKey
       ? this.generateAccount(privateKey)
       : this.defaultAccount;
