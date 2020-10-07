@@ -15,12 +15,14 @@ import { EthUtils } from "../utils";
 import {
   GetTransactionsByAccountOptions,
   SendTransactionToExternalAccountOptions,
+  ITokenTransferArgs,
 } from "./interfaces";
 
 export interface FactoryArgs {
   provider?: provider;
   httpProviderHost?: string;
   privateKey?: string;
+  abi?: Web3Utils.AbiItem[];
   options?: {
     defaultTransactionConfirmationBlocks?: number;
   };
@@ -31,10 +33,12 @@ export class EthHelper {
   // private eth: Eth;
   private defaultAccount?: Account;
   private defaultTransactionConfirmationBlocks: number;
+  private tokenContract: any;
 
   protected constructor(
     provider: provider,
     privateKey?: string,
+    abi?: Web3Utils.AbiItem[],
     options?: {
       defaultTransactionConfirmationBlocks?: number;
     }
@@ -48,6 +52,9 @@ export class EthHelper {
       this.eth.transactionConfirmationBlocks = defaultTransactionConfirmationBlocks;
     }
     this.defaultTransactionConfirmationBlocks = this.eth.transactionConfirmationBlocks;
+    if (abi) {
+      this.tokenContract = new this.eth.Contract(abi);
+    }
   }
 
   public static factoryMethod(args: FactoryArgs = {}) {
@@ -63,7 +70,7 @@ export class EthHelper {
       throw Error("Provider is missing");
     }
 
-    return new EthHelper(provider, privateKey, options);
+    return new EthHelper(provider, privateKey, args.abi, options);
   }
 
   /**
@@ -216,5 +223,53 @@ export class EthHelper {
 
   public async getTransactionByHash(hash: string): Promise<Transaction> {
     return await this.eth.getTransaction(hash);
+  }
+
+  public async sendToken(args: ITokenTransferArgs, privateKey: string) {
+    args.senderAddr = EthUtils.hexStringFull(args.senderAddr);
+    args.receiverAddr = EthUtils.hexStringFull(args.receiverAddr);
+    if (!args.tokenInfo.address) {
+      return this.sendTransactionToExternalAccount(args);
+    }
+    this.tokenContract.options.address = args.tokenInfo.address;
+    const count = await this.eth.getTransactionCount(args.senderAddr);
+    const amount = Web3Utils.toWei(args.amount);
+    const data = this.tokenContract.methods
+      .transfer(args.receiverAddr, amount)
+      .encodeABI();
+    const rawTx = {
+      from: args.senderAddr,
+      gasPrice: Web3Utils.toWei((args.gasPrice || 21).toString()), //gwei
+      to: EthUtils.hexStringFull(args.tokenInfo.address),
+      gas: "0x00",
+      nonce: Web3Utils.toHex(count),
+      data: data,
+    };
+    const gas = await this.eth.estimateGas(rawTx);
+
+    // Check if current balance is enough to send a tx
+    const gasPrice = parseFloat(
+      Web3Utils.fromWei(
+        Web3Utils.toWei((args.gasPrice || 21).toString(), "gwei"),
+        "ether"
+      )
+    );
+    const currentBalance = await this.getEtherBalance(args.senderAddr);
+    if (parseFloat(currentBalance) < gasPrice * gas) {
+      throw new Error("balance_not_enough");
+    }
+    const account = privateKey
+      ? this.generateAccount(privateKey)
+      : this.defaultAccount;
+
+    rawTx.gas = Web3Utils.toHex(gas);
+    const signedData: any = await this.eth.accounts.signTransaction(
+      rawTx,
+      account.privateKey
+    );
+    const transactionReceipt = await this.eth.sendSignedTransaction(
+      signedData.rawTransaction
+    );
+    return transactionReceipt;
   }
 }
