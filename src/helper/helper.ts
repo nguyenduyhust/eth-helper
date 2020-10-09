@@ -232,16 +232,14 @@ export class EthHelper {
       return this.sendTransactionToExternalAccount(args);
     }
     this.tokenContract.options.address = args.tokenInfo.address;
-    const count = await this.eth.getTransactionCount(args.from);
     const data = this.tokenContract.methods
       .transfer(args.to, args.tokenInfo.id)
       .encodeABI();
-    const rawTx = {
+    const rawTx: TransactionConfig = {
       from: args.from,
-      gasPrice: Web3Utils.toWei((args.gasPrice || 21).toString()), //gwei
+      gasPrice: await this.eth.getGasPrice(),
       to: EthUtils.hexStringFull(args.tokenInfo.address),
       gas: "0x00",
-      nonce: Web3Utils.toHex(count),
       data: data,
     };
     const gas = await this.eth.estimateGas(rawTx);
